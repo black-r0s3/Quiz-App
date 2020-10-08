@@ -1,10 +1,10 @@
 
+
 const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-text"));
-const questionCounterText = document.getElementById("questionCounter");
+const progressText = document.getElementById("progressText");
 const scoreText = document.getElementById("score");
 const progressBarFull = document.getElementById("progressBarFull");
-
 let currentQuestion = {};
 let acceptingAnswers = false;
 let score = 0;
@@ -39,7 +39,6 @@ let questions = [
   }
 ];
 
-//CONSTANTS
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 3;
 
@@ -52,13 +51,13 @@ startGame = () => {
 
 getNewQuestion = () => {
   if (availableQuesions.length === 0 || questionCounter >= MAX_QUESTIONS) {
-
-    return window.location.assign("/end.html");
+    localStorage.setItem("mostRecentScore", score);
+    return window.location.assign("/QUIZ%20APP/end.html");
   }
   questionCounter++;
-   progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`;
-   
-    progressBarFull.style.width = `${(questionCounter / MAX_QUESTIONS) * 100}%`;
+  progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`;
+
+  progressBarFull.style.width = `${(questionCounter / MAX_QUESTIONS) * 100}%`;
 
   const questionIndex = Math.floor(Math.random() * availableQuesions.length);
   currentQuestion = availableQuesions[questionIndex];
@@ -84,9 +83,9 @@ choices.forEach(choice => {
     const classToApply =
       selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
 
-      if (classToApply === "correct") {
-     incrementScore(CORRECT_BONUS);
-   }
+    if (classToApply === "correct") {
+      incrementScore(CORRECT_BONUS);
+    }
 
     selectedChoice.parentElement.classList.add(classToApply);
 
@@ -96,6 +95,7 @@ choices.forEach(choice => {
     }, 1000);
   });
 });
+
 incrementScore = num => {
   score += num;
   scoreText.innerText = score;
